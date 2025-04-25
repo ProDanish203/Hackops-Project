@@ -1,5 +1,5 @@
 export interface IUser {
-  _id: string;
+  id: string;
   email: string;
   name: string;
   phone: string;
@@ -13,13 +13,13 @@ export interface IUser {
 }
 
 export interface IProduct {
-  _id: string;
+  id: string;
   name: string;
   description: string;
   price: string;
   stock: string;
   category: {
-    _id: string;
+    id: string;
     name: string;
   };
   images: string[];
@@ -30,7 +30,7 @@ export interface IProduct {
 }
 
 export interface ICategory {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
   image: string;
@@ -44,7 +44,7 @@ export interface ICategory {
 
 export interface IOrderItem {
   product: {
-    _id: string;
+    id: string;
     name: string;
     coverImage: string;
   };
@@ -60,7 +60,7 @@ export interface IAddress {
 }
 
 export interface IOrder {
-  _id: string;
+  id: string;
   orderItems: IOrderItem[];
   totalAmount: number;
   couponCode?: string;
@@ -69,7 +69,7 @@ export interface IOrder {
   billingAddress: IAddress;
   paymentMethod: "cash_on_delivery" | "online";
   customer?: {
-    _id: string;
+    id: string;
     name: string;
     email: string;
     phone: string;
@@ -88,10 +88,10 @@ export interface IOrder {
 }
 
 export interface IOrderMin {
-  _id: string;
+  id: string;
   totalAmount: number;
   customer?: {
-    _id: string;
+    id: string;
     name: string;
   };
   name: string;

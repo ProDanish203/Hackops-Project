@@ -147,7 +147,7 @@ export const DataTable = ({
                               align="end"
                               className="flex flex-col gap-y-2"
                             >
-                              <Link href={`/products/update/${product._id}`}>
+                              <Link href={`/products/update/${product.id}`}>
                                 <DropdownMenuItem role="link">
                                   Update
                                 </DropdownMenuItem>
@@ -156,7 +156,7 @@ export const DataTable = ({
                                 onClick={() => {
                                   setOpen(true);
                                   setAlertType("delete");
-                                  setAlertId(product._id);
+                                  setAlertId(product.id);
                                 }}
                                 className="bg-red-500 focus:bg-red-600 focus:text-darkText dark:focus:bg-red-600 text-darkText"
                               >
@@ -208,7 +208,7 @@ export const DataTable = ({
                         <TableCell>
                           {" "}
                           <ChangeOrderStatus
-                            id={order._id}
+                            id={order.id}
                             orderStatus={order.orderStatus}
                           />
                         </TableCell>

@@ -13,9 +13,10 @@ export const getAllProducts = async ({
 }) => {
   try {
     const { data } = await api.get(
-      `/products?limit=${limit || 15}&page=${page || 1}&search=${
+      `/product?limit=${limit || 15}&page=${page || 1}&search=${
         search || ""
-      }&filter=${filter || ""}`
+      }&filter=${filter || ""}`,
+      { withCredentials: true }
     );
 
     return {
@@ -32,7 +33,9 @@ export const getAllProducts = async ({
 
 export const deleteProduct = async (id: string) => {
   try {
-    const { data } = await api.delete(`/products/${id}`);
+    const { data } = await api.delete(`/product/${id}`, {
+      withCredentials: true,
+    });
 
     return {
       success: true,
@@ -48,10 +51,11 @@ export const deleteProduct = async (id: string) => {
 
 export const addProduct = async (formData: FormData) => {
   try {
-    const { data } = await api.post(`/products/`, formData, {
+    const { data } = await api.post(`/product/`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
 
     return {
@@ -74,10 +78,11 @@ export const updateProduct = async ({
   id: string;
 }) => {
   try {
-    const { data } = await api.put(`/products/${id}`, formData, {
+    const { data } = await api.put(`/product/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
 
     return {
@@ -94,7 +99,9 @@ export const updateProduct = async ({
 
 export const getSingleProduct = async (id: string) => {
   try {
-    const { data } = await api.get(`/products/${id}`);
+    const { data } = await api.get(`/product/${id}`, {
+      withCredentials: true,
+    });
 
     return {
       success: true,

@@ -13,3 +13,12 @@ export const throwError = (
 
 export const getRandomFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString('hex');
+
+export const generateTrackingNumber = () => {
+  const prefix = 'TRK';
+  const timestamp = new Date().getTime().toString().slice(-8);
+  const random = Math.floor(Math.random() * 10000)
+    .toString()
+    .padStart(4, '0');
+  return `${prefix}-${timestamp}-${random}`.toUpperCase();
+};

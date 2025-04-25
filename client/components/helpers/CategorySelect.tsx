@@ -52,7 +52,7 @@ export const CategorySelect = ({
           data.success &&
           data.response.length > 0 &&
           data?.response.map((category: any) => (
-            <SelectItem key={category._id} value={category._id}>
+            <SelectItem key={category.id} value={category.id}>
               {category.name}
             </SelectItem>
           ))
