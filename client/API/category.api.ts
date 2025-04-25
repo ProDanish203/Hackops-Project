@@ -6,6 +6,7 @@ export const createCategory = async (formData: FormData) => {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
 
     return {
@@ -32,6 +33,7 @@ export const updateCategory = async ({
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      withCredentials: true,
     });
 
     return {
@@ -48,7 +50,9 @@ export const updateCategory = async ({
 
 export const deleteCategory = async (id: string) => {
   try {
-    const { data } = await api.delete(`/category/${id}`);
+    const { data } = await api.delete(`/category/${id}`, {
+      withCredentials: true,
+    });
 
     return {
       success: true,
@@ -79,7 +83,8 @@ export const getAllCategories = async ({
     const { data } = await api.get(
       `/category?limit=${limit || 15}&page=${page || 1}&search=${
         search || ""
-      }&filter=${filter || ""}&parentId=${parentId || ""}`
+      }&filter=${filter || ""}&parentId=${parentId || ""}`,
+      { withCredentials: true }
     );
 
     return {
@@ -96,7 +101,9 @@ export const getAllCategories = async ({
 
 export const getCategoryNames = async () => {
   try {
-    const { data } = await api.get(`/category/names`);
+    const { data } = await api.get(`/category/names`, {
+      withCredentials: true,
+    });
 
     return {
       success: true,

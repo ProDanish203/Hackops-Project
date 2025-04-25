@@ -51,7 +51,7 @@ const CategoriesPage = ({ searchParams }: { searchParams: SearchParams }) => {
           <>
             {data && data.success && data.response.data.length > 0 ? (
               data.response.data.map((category: ICategory) => (
-                <CategoryCard key={category._id} {...category} />
+                <CategoryCard key={category.id} {...category} />
               ))
             ) : (
               <p className="dark:text-neutral-400 text-neutral-800 text-lg w-full">

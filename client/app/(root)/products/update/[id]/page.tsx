@@ -25,7 +25,7 @@ const UodateProduct = ({ params }: { params: { id: string } }) => {
         data.response && (
           <ProductForm
             isUpdate
-            id={data.response._id}
+            id={data.response.id}
             productData={data.response}
           />
         )

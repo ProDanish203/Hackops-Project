@@ -38,7 +38,7 @@ export class UsersService {
           },
         },
         skip,
-        take: limit,
+        take: Number(limit),
         orderBy: {
           name: sortDirection,
         },

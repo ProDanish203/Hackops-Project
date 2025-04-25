@@ -114,7 +114,7 @@ export class CategoryService {
       const categories = await this.prisma.category.findMany({
         where: whereCondition,
         skip,
-        take: limit,
+        take: Number(limit),
         orderBy: {
           name: sortDirection,
         },
