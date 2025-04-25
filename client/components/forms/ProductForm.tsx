@@ -43,7 +43,7 @@ export const ProductForm = ({
     if (isUpdate) {
       setValue("title", productData?.name || "");
       setValue("description", productData?.description || "");
-      setValue("category", productData?.category._id || "");
+      setValue("category", productData?.category.id || "");
       setValue("price", productData?.price.toString() || "");
       setValue("quantity", productData?.stock.toString() || "");
       // console.log(data?.imageUrls);
@@ -68,7 +68,7 @@ export const ProductForm = ({
     files.forEach(({ file }) => formData.append("images", file));
     formData.append("name", data.title);
     formData.append("description", data.description);
-    formData.append("category", data.category);
+    formData.append("categoryId", data.category);
     formData.append("price", data.price);
     formData.append("stock", data.quantity);
 

@@ -24,7 +24,8 @@ export const getAllOrders = async ({
     const { data } = await api.get(
       `/order?limit=${limit || 15}&page=${page || 1}&search=${
         search || ""
-      }&status=${status || ""}`
+      }&status=${status || ""}`,
+      { withCredentials: true }
     );
 
     return {
@@ -41,7 +42,7 @@ export const getAllOrders = async ({
 
 export const getOrderById = async (id: string) => {
   try {
-    const { data } = await api.get(`/order/${id}`);
+    const { data } = await api.get(`/order/${id}`, { withCredentials: true });
 
     return {
       success: true,
@@ -72,9 +73,13 @@ export const changeOrderStatus = async ({
         response: "Invalid status",
       };
 
-    const { data } = await api.patch(`/order/${id}/status`, {
-      status,
-    });
+    const { data } = await api.patch(
+      `/order/${id}/status`,
+      {
+        status,
+      },
+      { withCredentials: true }
+    );
 
     return {
       success: true,
