@@ -10,6 +10,10 @@ RUN pnpm install
 
 COPY . .
 
-EXPOSE 3000
+RUN pnpm dlx prisma generate
 
-CMD ["pnpm", "dev"]
+RUN pnpm build
+
+EXPOSE 8000
+
+CMD ["pnpm", "start:migrate:prod"]
