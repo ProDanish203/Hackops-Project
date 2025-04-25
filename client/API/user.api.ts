@@ -15,7 +15,8 @@ export const getAllUsers = async ({
     const { data } = await api.get(
       `/users?limit=${limit || 15}&page=${page || 1}&search=${
         search || ""
-      }&filter=${filter || ""}`
+      }&filter=${filter || ""}`,
+      { withCredentials: true }
     );
 
     return {
