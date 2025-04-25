@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String  @id @unique @default(uuid()) @db.Uuid
+  name         String
+  email        String  @unique
+  password     String
+  salt         String
+  profileImage String
+  role         Role    @default(USER)
+  address      String?
+
+  loginProvider LoginProvider @default(EMAIL)
+
+  hasNotifications Boolean @default(false)
+  isEmailVerified  Boolean @default(false)
+
+  lastLoginAt  DateTime?
+  lastActiveAt DateTime?
+
+  deletedAt DateTime?
+
+  refreshToken              String?
+  verifyToken               String?
+  verifyTokenExpiry         DateTime?
+  forgotPasswordToken       String?
+  forgotPasswordTokenExpiry DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdCategories Category[]
+  orders            Order[]
+
+  @@index([name])
+  @@index([email])
+}
+
+model Product {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  price       Float
+  stock       Int      @default(0)
+  rating      Float    @default(0)
+  images      String[]
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.Uuid
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([categoryId])
+}
+
+model Category {
+  id               String     @id @default(uuid()) @db.Uuid
+  name             String
+  description      String?
+  slug             String     @unique
+  image            String
+  parentCategory   Category?  @relation("CategoryToSubcategory", fields: [parentCategoryId], references: [id])
+  parentCategoryId String?    @db.Uuid
+  subcategories    Category[] @relation("CategoryToSubcategory")
+
+  createdBy   User?   @relation(fields: [createdById], references: [id])
+  createdById String? @db.Uuid
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([slug])
+}
+
+model Address {
+  id     String @id @default(uuid()) @db.Uuid
+  street String
+  city   String
+  state  String
+
+  shippingOrders Order[] @relation("ShippingAddress")
+  billingOrders  Order[] @relation("BillingAddress")
+}
+
+model OrderItem {
+  id        String @id @default(uuid()) @db.Uuid
+  quantity  Int
+  price     Float
+  itemTotal Float
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.Uuid
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String @db.Uuid
+}
+
+model Order {
+  id          String  @id @default(uuid()) @db.Uuid
+  totalAmount Float
+  couponCode  String?
+  discount    Float?
+
+  shippingAddress   Address @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  shippingAddressId String  @db.Uuid
+
+  billingAddress   Address @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  billingAddressId String  @db.Uuid
+
+  paymentMethod PaymentMethod
+
+  customer   User?   @relation(fields: [customerId], references: [id])
+  customerId String? @db.Uuid
+
+  name  String
+  email String
+  phone String
+
+  orderStatus           OrderStatus   @default(pending)
+  paymentStatus         PaymentStatus @default(pending)
+  trackingNumber        String        @unique
+  estimatedDeliveryDate DateTime?
+  actualDeliveryDate    DateTime?
+  notes                 String?
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([trackingNumber])
+  @@index([customerId])
+  @@index([orderStatus])
+}
+
+enum Role {
+  ADMIN
+  USER
+  FAMILY_MEMBER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum LoginProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+}
+
+enum PaymentMethod {
+  cash_on_delivery
+  online
+}
+
+enum OrderStatus {
+  pending
+  processing
+  completed
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+}
