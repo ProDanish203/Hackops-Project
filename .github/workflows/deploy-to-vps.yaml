@@ -18,9 +18,6 @@ jobs:
         with:
           node-version: "22.2.0"
 
-      - name: Check username
-        run: echo "Running as $(whoami)"
-
       - name: Install pnpm
         run: npm install -g pnpm
 
