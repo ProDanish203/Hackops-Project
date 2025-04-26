@@ -1,0 +1,50 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js 22.2.0
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22.2.0"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install PM2 globally
+        run: npm install -g pm2
+
+      - name: Create server .env file
+        run: |
+          cd server
+          echo "${{ secrets.SERVER_ENV }}" > .env
+
+      - name: Create client .env file
+        run: |
+          cd client
+          echo "${{ secrets.CLIENT_ENV }}" > .env
+
+      - name: Install dependencies and build
+        run: |
+          cd server
+          pnpm install
+          cd ../client
+          pnpm install
+          pnpm run build
+
+      - name: Start server and client
+        run: |
+          pm2 restart server
+          pm2 restart client
+
+      - name: Reload Nginx
+        run: sudo service nginx restart
