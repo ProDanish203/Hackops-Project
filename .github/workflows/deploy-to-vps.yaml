@@ -5,6 +5,7 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -37,6 +38,8 @@ jobs:
         run: |
           cd server
           pnpm install
+          pnpm dlx prisma generate
+          pnpm run build
           cd ../client
           pnpm install
           pnpm run build
