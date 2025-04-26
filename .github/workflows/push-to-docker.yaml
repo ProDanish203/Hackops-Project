@@ -1,0 +1,44 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  publish_image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Server Docker image
+        run: |
+          cd server
+          docker build -t hackops-server .
+
+      - name: Push to DockerHub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          cd server
+          docker push prodanish203/hackops-server
+
+      - name: Build Client Docker image
+        run: |
+          cd client
+          docker build -t hackops-client .
+
+      - name: Push to DockerHub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          cd client
+          docker push prodanish203/hackops-client
