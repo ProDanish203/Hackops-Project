@@ -18,27 +18,25 @@ jobs:
       - name: Build Server Docker image
         run: |
           cd server
-          docker build -t hackops-server .
+          docker build -t prodanish203/hackops-server:latest .
 
-      - name: Push to DockerHub
+      - name: Push Server to DockerHub
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          cd server
-          docker push prodanish203/hackops-server
+          docker push prodanish203/hackops-server:latest
 
       - name: Build Client Docker image
         run: |
           cd client
-          docker build -t hackops-client .
+          docker build -t prodanish203/hackops-client:latest .
 
-      - name: Push to DockerHub
+      - name: Push Client to DockerHub
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_TOKEN }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          cd client
-          docker push prodanish203/hackops-client
+          docker push prodanish203/hackops-client:latest
