@@ -1,16 +1,28 @@
-name: Deploy to VPS with Docker Compose
+name: Continuous Deployment
 
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js 22.2.0
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22.2.0"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install PM2 globally
+        run: npm install -g pm2
 
       - name: Create server .env file
         run: |
@@ -22,14 +34,20 @@ jobs:
           cd client
           echo "${{ secrets.CLIENT_ENV }}" > .env
 
-      - name: Stop and remove existing containers
-        run: sudo docker compose down || true
+      - name: Install dependencies and build
+        run: |
+          cd server
+          pnpm install
+          pnpm dlx prisma generate
+          pnpm run build
+          cd ../client
+          pnpm install
+          pnpm run build
 
-      - name: Build and start Docker Compose
-        run: sudo docker compose up -d --build
+      - name: Start server and client
+        run: |
+          pm2 restart server
+          pm2 restart client
 
       - name: Reload Nginx
-        run: sudo service nginx reload || sudo systemctl reload nginx
-
-      - name: Prune unused Docker images
-        run: sudo docker image prune -f
+        run: sudo service nginx restart
