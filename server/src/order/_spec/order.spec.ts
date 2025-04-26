@@ -80,7 +80,7 @@ describe('OrderController', () => {
         price: faker.number.int({ min: 10, max: 1000 }),
         stock: faker.number.int({ min: 1, max: 100 }),
         images: ['test.jpg'],
-        categoryId: category.id,
+        categoryId: category.id
       },
     });
 
