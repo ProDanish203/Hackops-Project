@@ -43,8 +43,8 @@ export const UserAvatar = () => {
     if (!isLoading && data && data.success && data.response) {
       setUser(data.response);
     } else if (!isLoading && data && !data.success) {
-      typeof window !== undefined && localStorage.removeItem("token");
-      handleLogout();
+      // typeof window !== undefined && localStorage.removeItem("token");
+      // handleLogout();
       router.push("/login");
     }
   }, [data]);

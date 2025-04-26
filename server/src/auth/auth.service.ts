@@ -111,9 +111,10 @@ export class AuthService {
 
     const cookieOptions: CookieOptions = {
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      sameSite: 'none',
+      sameSite: 'lax',
       httpOnly: true,
       secure: true,
+      path: '/',
     };
 
     res.cookie('token', token, cookieOptions);
@@ -127,9 +128,10 @@ export class AuthService {
         throw throwError('User not found', HttpStatus.NOT_FOUND);
 
       const cookieOptions = {
-        sameSite: 'none' as 'none',
+        sameSite: 'lax' as 'lax',
         httpOnly: true,
         secure: true,
+        path: '/',
       };
 
       response.clearCookie('token', cookieOptions);
