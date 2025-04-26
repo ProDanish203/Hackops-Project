@@ -2,18 +2,56 @@ import {PrismaClient} from '@prisma/client'
 import { MulterFile } from '../types/type';
 
 export const cleanUp = async (prismaClient: PrismaClient) => {
-  await prismaClient.orderItem.deleteMany({});
+  console.log('Starting database cleanup...'); // Add logging
 
-  await prismaClient.order.deleteMany({});
+  try {
+    await prismaClient.orderItem.deleteMany({});
+    console.log('Deleted OrderItems');
+  } catch (error) {
+    console.error('Error deleting OrderItems:', error);
+    throw error; // Re-throw to fail the test if cleanup fails critically
+  }
 
-  await prismaClient.product.deleteMany({});
-  await prismaClient.category.deleteMany({});
+  try {
+    await prismaClient.order.deleteMany({});
+    console.log('Deleted Orders');
+  } catch (error) {
+    console.error('Error deleting Orders:', error);
+    throw error;
+  }
 
-  await prismaClient.address.deleteMany({});
+  try {
+    await prismaClient.product.deleteMany({});
+    console.log('Deleted Products');
+  } catch (error) {
+    console.error('Error deleting Products:', error);
+    throw error;
+  }
 
-  await prismaClient.user.deleteMany({});
-}
+  try {
+    await prismaClient.category.deleteMany({});
+    console.log('Deleted Categories');
+  } catch (error) {
+    console.error('Error deleting Categories:', error);
+    throw error;
+  }
 
+  try {
+    await prismaClient.address.deleteMany({});
+    console.log('Deleted Addresses');
+  } catch (error) {
+    console.error('Error deleting Addresses:', error);
+    throw error;
+  }
+
+  try {
+    await prismaClient.user.deleteMany({});
+    console.log('Deleted Users');
+  } catch (error) {
+    console.error('Error deleting Users:', error);
+    throw error;
+  }
+};
 export const mockImage: MulterFile = {
   buffer: Buffer.from(''),
   encoding: 'utf-8',
