@@ -52,7 +52,7 @@ export class ProductService {
           description,
           price: parseFloat(price.toString()),
           categoryId,
-          stock: stock ? parseFloat(price.toString()) : 0,
+          stock: stock ? parseFloat(stock.toString()) : 0,
           images: imageFilenames,
         },
         include: {
