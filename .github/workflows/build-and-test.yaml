@@ -44,7 +44,7 @@ jobs:
 
       - name: Dump environment variables
         run: |
-          cd server/apps/api
+          cd server
           echo "${{ secrets.SERVER_ENV }}" > .env
 
       - name: Install dependencies
@@ -62,5 +62,5 @@ jobs:
         working-directory: server
 
       - name: Run tests
-        run: pnpm test --filter=api
+        run: pnpm test
         working-directory: server
