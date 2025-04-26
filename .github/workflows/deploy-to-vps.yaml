@@ -1,28 +1,20 @@
-name: Continuous Deployment
+name: Deploy to VPS with Docker
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
+  workflow_run:
+    workflows: ["Docker Build and Push"]
+    types:
+      - completed
     branches: ["main"]
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: self-hosted
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node.js 22.2.0
-        uses: actions/setup-node@v2
-        with:
-          node-version: "22.2.0"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install PM2 globally
-        run: npm install -g pm2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Create server .env file
         run: |
@@ -34,20 +26,22 @@ jobs:
           cd client
           echo "${{ secrets.CLIENT_ENV }}" > .env
 
-      - name: Install dependencies and build
-        run: |
-          cd server
-          pnpm install
-          pnpm dlx prisma generate
-          pnpm run build
-          cd ../client
-          pnpm install
-          pnpm run build
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Start server and client
+      - name: Pull Docker images
         run: |
-          pm2 restart server
-          pm2 restart client
+          docker pull prodanish203/hackops-server:latest
+          docker pull prodanish203/hackops-client:latest
+
+      - name: Stop and remove existing containers
+        run: docker compose down || true
+
+      - name: Start Docker Compose
+        run: docker compose up -d
 
       - name: Reload Nginx
-        run: sudo service nginx restart
+        run: sudo service nginx reload || sudo systemctl reload nginx
+
+      - name: Prune unused Docker images
+        run: docker image prune -f
