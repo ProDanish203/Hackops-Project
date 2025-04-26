@@ -27,6 +27,10 @@ describe('AuthController', () => {
     await cleanUp(prisma)
   });
 
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
