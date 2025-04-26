@@ -1,16 +1,12 @@
-name: Deploy to VPS with Docker
+name: Deploy to VPS with Docker (Local Build)
 
 on:
-  workflow_run:
-    workflows: ["Docker Build and Push"]
-    types:
-      - completed
+  push:
     branches: ["main"]
   workflow_dispatch:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -26,22 +22,14 @@ jobs:
           cd client
           echo "${{ secrets.CLIENT_ENV }}" > .env
 
-      - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Pull Docker images
-        run: |
-          docker pull prodanish203/hackops-server:latest
-          docker pull prodanish203/hackops-client:latest
-
       - name: Stop and remove existing containers
-        run: docker compose down || true
+        run: sudo docker compose down || true
 
-      - name: Start Docker Compose
-        run: docker compose up -d
+      - name: Build and start Docker Compose
+        run: sudo docker compose up -d --build
 
       - name: Reload Nginx
         run: sudo service nginx reload || sudo systemctl reload nginx
 
       - name: Prune unused Docker images
-        run: docker image prune -f
+        run: sudo docker image prune -f

@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   app:
     depends_on:
@@ -18,8 +16,6 @@ services:
         - path: ./client
           target: /app
           action: sync
-    networks:
-      - hackops-network
 
   api:
     build: ./server
@@ -36,12 +32,6 @@ services:
         - path: ./server
           target: /app
           action: sync
-    networks:
-      - hackops-network
 
 volumes:
   hackops:
-
-networks:
-  hackops-network:
-    driver: bridge

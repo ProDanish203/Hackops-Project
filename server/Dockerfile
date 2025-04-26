@@ -8,11 +8,11 @@ COPY package.json pnpm-lock.yaml* ./
 
 RUN pnpm install
 
-COPY . .
-
 RUN pnpm dlx prisma generate
 
 RUN pnpm build
+
+COPY . .
 
 EXPOSE 8000
 
