@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  app:
+    depends_on:
+      - api
+    build: ./client
+    ports:
+      - 3000:3000
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+
+    develop:
+      watch:
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/pnpm-lock.yaml
+          action: rebuild
+        - path: ./client
+          target: /app
+          action: sync
+
+  api:
+    build: ./server
+    ports:
+      - 8000:8000
+    environment:
+      - PORT=8000
+      - DATABASE_URL=
+
+      - BASE_DOMAIN=http://localhost:3000
+
+      - JWT_SECRET=
+      - JWT_EXPIRY=
+
+      - ACCESS_TOKEN_SECRET=
+      - ACCESS_TOKEN_EXPIRY=
+
+      - REFRESH_TOKEN_SECRET=
+      - REFRESH_TOKEN_EXPIRY=
+
+      - EMAIL=
+      - EMAIL_PASSWORD=
+
+      - BUCKET_NAME=
+      - BUCKET_REGION=
+      - AWS_BUCKET_ACCESS_KEY_ID=
+      - AWS_BUCKET_SECRET_ACCESS_KEY=
+      - CLOUDFRONT_DISTRIBUTION_ID=
+      - CLOUDFRONT_URL=
+    develop:
+      watch:
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server/pnpm-lock.yaml
+          action: rebuild
+
+        - path: ./server
+          target: /app
+          action: sync
+
+volumes:
+  hackops:

@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   UseGuards,
@@ -23,7 +22,6 @@ import {
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Role } from '@prisma/client';
-import { GoogleOAuthGuard } from 'src/common/guards/google-auth.guard';
 import { Request, Response } from 'express';
 
 @Controller('auth')
@@ -82,16 +80,5 @@ export class AuthController {
     @Body(ValidationPipe) { token }: VerifyEmailDto,
   ) {
     return this.authService.verifyEmail({ request, token });
-  }
-
-  @UseGuards(GoogleOAuthGuard)
-  @Get('google')
-  async googleAuth(@Req() req) {}
-
-  @UseGuards(GoogleOAuthGuard)
-  @Get('google-auth-redirect')
-  async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    await this.authService.signInWithGoogle(req.user, res);
-    return res.redirect(`${process.env.GOOGLE_REDIRECT_URL_CLIENT_REACT}`);
   }
 }

@@ -16,4 +16,4 @@ RUN pnpm build
 
 EXPOSE 8000
 
-CMD ["pnpm", "start:migrate:prod"]
+CMD ["pnpm", "start:prod"]
