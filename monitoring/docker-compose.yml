@@ -1,0 +1,36 @@
+version: '3.8' # Specify Compose file version
+
+volumes:
+  prometheus-data: {} # Declare named volume for Prometheus data persistence
+  grafana-data: {}    # Declare named volume for Grafana data persistence
+
+services:
+  prometheus:
+    image: prom/prometheus:latest # Use the official Prometheus image
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Mount config file from current directory
+      - prometheus-data:/prometheus                     # Mount data volume
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'  # Tell Prometheus which config to use inside container
+      - '--web.listen-address=:9090'                    # Listen on port 9090
+    network_mode: host
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana-oss:latest # Use the official open-source Grafana image
+    container_name: grafana
+    ports:
+      # Map port 3001 on your host machine to port 3000 inside the Grafana container
+      - "3001:3000"
+    volumes:
+      # Mount data volume for dashboards, plugins, settings persistence
+      - grafana-data:/var/lib/grafana
+    # Optional: You can pre-configure Grafana admin user/password here if needed
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Change this!
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    depends_on: # Optional: Grafana logically depends on Prometheus, but Compose doesn't wait for readiness
+      - prometheus
