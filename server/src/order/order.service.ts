@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, HttpException } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { StorageService } from 'src/common/services/storage.service';
 import { throwError } from 'src/common/utils/helpers';
@@ -128,6 +128,9 @@ export class OrderService {
       };
     } catch (error) {
       console.error(error);
+      if (error instanceof HttpException) {
+        throw error; // Preserve the original error
+      }
       throw throwError(error.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -183,7 +186,7 @@ export class OrderService {
 
       return {
         success: true,
-        message: '',
+        message: 'Orders fetched successfully',
         data: orders,
         pagination,
       };
@@ -243,11 +246,14 @@ export class OrderService {
 
       return {
         success: true,
-        message: 'Order Details Fetched Successfully',
+        message: 'Order details fetched successfully',
         data: orderWithImages,
       };
     } catch (error) {
       console.error(error);
+      if (error instanceof HttpException) {
+        throw error; // Preserve the original error
+      }
       throw throwError(error.message, HttpStatus.BAD_REQUEST);
     }
   }
