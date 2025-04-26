@@ -1,0 +1,66 @@
+name: Build and Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  setup-and-build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: github
+          POSTGRES_DB: github
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U github"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://github:github@localhost:5432/github
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.2.0"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Dump environment variables
+        run: |
+          cd server/apps/api
+          echo "${{ secrets.SERVER_ENV }}" > .env
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: server
+
+      - name: Setup Database
+        run: |
+          pnpm prisma:migrate
+          pnpm prisma:generate
+        working-directory: server
+
+      - name: Build packages
+        run: pnpm build
+        working-directory: server
+
+      - name: Run tests
+        run: pnpm test --filter=api
+        working-directory: server
