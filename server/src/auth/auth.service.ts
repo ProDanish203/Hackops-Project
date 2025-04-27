@@ -113,7 +113,6 @@ export class AuthService {
       maxAge: 15 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
       httpOnly: true,
-      secure: true,
       path: '/',
     };
 
@@ -130,7 +129,6 @@ export class AuthService {
       const cookieOptions = {
         sameSite: 'lax' as 'lax',
         httpOnly: true,
-        secure: true,
         path: '/',
       };
 
