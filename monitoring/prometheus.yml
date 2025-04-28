@@ -1,11 +1,13 @@
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
   - job_name: "nestjs-app"
     metrics_path: "/api/v1/metrics"
+    scrape_timeout: 10s
     static_configs:
-      - targets: ["localhost:8000"]
+      - targets: ["api:8000"]
 
   - job_name: "prometheus"
     static_configs:
