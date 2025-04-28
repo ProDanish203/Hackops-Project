@@ -1,16 +1,23 @@
-name: Deploy to VPS with Docker Compose
+name: Continuous Deployment
 
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js 22.2.0
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22.2.0"
 
       - name: Create server .env file
         run: |
@@ -22,14 +29,22 @@ jobs:
           cd client
           echo "${{ secrets.CLIENT_ENV }}" > .env
 
-      - name: Stop and remove existing containers
+      - name: Stop existing containers
         run: sudo docker compose down || true
 
       - name: Build and start Docker Compose
         run: sudo docker compose up -d --build
 
+      - name: Verify volumes were created
+        run: |
+          echo "=== Checking Volumes ==="
+          sudo docker volume ls
+
+          echo "=== Checking Prometheus Data ==="
+          sudo docker exec prometheus ls -la /prometheus || true
+
       - name: Reload Nginx
-        run: sudo service nginx reload || sudo systemctl reload nginx
+        run: sudo systemctl reload nginx
 
       - name: Prune unused Docker images
         run: sudo docker image prune -f

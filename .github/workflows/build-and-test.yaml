@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build, Test, and Scan
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup-and-build:
+  build-test-scan:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -62,5 +62,21 @@ jobs:
         working-directory: server
 
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:cov
         working-directory: server
+      
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: ./server
+          args: >
+            -Dsonar.organization=Hackops
+            -Dsonar.projectKey=my-inventory-backend
+            -Dsonar.projectName=Inventory-Backend
+            -Dsonar.sources=src
+            -Dsonar.test.inclusions=**/*.spec.ts
+            -Dsonar.exclusions=node_modules/**/*,dist/**/*,coverage/**/*,**/*.spec.ts,test/**/*
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
