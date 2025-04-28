@@ -2,7 +2,6 @@ import {PrismaClient} from '@prisma/client'
 import { MulterFile } from '../types/type';
 
 export const cleanUp = async (prismaClient: PrismaClient) => {
-  console.log('Starting database cleanup...'); // Add logging
 
   try {
     await prismaClient.orderItem.deleteMany({});
