@@ -110,6 +110,38 @@ docker compose up -d --build
 6. Prometheus collects metrics from all services
 7. Grafana provides visualization and monitoring dashboards by using prometheus as the data source.
 
+### Accessing Services (Production)
+
+- **Frontend**: http://159.89.162.126/
+- **Backend API**: http://159.89.162.126/api/v1
+- **Grafana**: http://159.89.162.126:3001
+- **Prometheus**: http://159.89.162.126:9090
+- **Docker Image (Client)**: https://hub.docker.com/repository/docker/prodanish203/hackops-client/general
+- **Docker Image (Backend)**: https://hub.docker.com/repository/docker/prodanish203/hackops-server/general
+
+## Infrastructure & Application Screenshots
+
+### System Architecture
+
+![System Architecture Diagram](./images/infra.png)
+![System Architecture Diagram](./images/infra2.png)
+
+### DevOps Components
+#### Grafana Dashboard
+![Grafana Monitoring Dashboard](./images/dashboard-1.png)
+![Grafana Monitoring Dashboard](./images/dashboard-2.png)
+![Grafana Monitoring Dashboard](./images/dashboard-3.png)
+#### Prometheus Dashboard
+![Prometheus Metrics](./images/prometheus-dashboard.png)
+#### Raw Metrics from API
+![Raw Metrics](./images/raw-metrics.png)
+
+<!-- ![CI/CD Pipeline](./images/pipeline.png) -->
+
+### Application UI
+
+![Login Page](./images/login-page.png)
+
 ####
 
 ---
