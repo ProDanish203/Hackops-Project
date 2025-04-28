@@ -18,7 +18,7 @@ services:
           target: /app
           action: sync
     networks:
-      - app-network
+      - hackops-network
 
   api:
     container_name: hackops-api
@@ -37,7 +37,7 @@ services:
           target: /app
           action: sync
     networks:
-      - app-network
+      - hackops-network
     volumes:
       - hackops-api-data:/app/data
 
@@ -57,7 +57,7 @@ services:
       - "9090:9090"
     restart: unless-stopped
     networks:
-      - app-network
+      - hackops-network
 
   grafana:
     image: grafana/grafana-oss:latest
@@ -74,11 +74,10 @@ services:
     depends_on:
       - prometheus
     networks:
-      - app-network
+      - hackops-network
 
 networks:
-  app-network:
-    name: hackops-network
+  hackops-network:
     driver: bridge
 
 volumes:

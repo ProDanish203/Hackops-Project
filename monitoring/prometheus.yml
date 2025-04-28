@@ -7,7 +7,7 @@ scrape_configs:
   - job_name: "nestjs-app"
     metrics_path: "/api/v1/metrics"
     static_configs:
-      - targets: ["hackops-api:8000"]
+      - targets: ["api:8000"]
         labels:
           instance: "api-service"
 
