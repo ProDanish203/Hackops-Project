@@ -1,25 +1,12 @@
-# ~/monitoring/prometheus.yml
-
 global:
-  scrape_interval: 15s # How frequently to scrape targets
+  scrape_interval: 15s
 
 scrape_configs:
-  # Job to scrape metrics from your NestJS app running on the host
-  - job_name: 'nestjs-app'
-    # This assumes your NestJS app metrics are reachable from the Prometheus container.
-    # Option 1 (Recommended if using Docker Desktop or recent Docker Engine versions on Linux):
-    # static_configs:
-    #  - targets: ['host.docker.internal:8000']
-
-    # Option 2 (If Option 1 fails, find your docker bridge IP - often 172.17.0.1):
-    # static_configs:
-    #  - targets: ['172.17.0.1:8000'] # Replace with your actual docker bridge IP
-
-    # Option 3 (EASIEST - if running Prometheus container with --network host, see Step 3):
+  - job_name: "nestjs-app"
+    metrics_path: "/api/v1/metrics"
     static_configs:
-      - targets: ['localhost:8000'] # Prometheus can use 'localhost' because it shares the host network
+      - targets: ["localhost:8000"]
 
-  # Optional: Job to scrape Prometheus itself
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090'] # Prometheus runs on port 9090
+      - targets: ["localhost:9090"]
