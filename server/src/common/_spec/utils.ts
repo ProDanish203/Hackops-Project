@@ -34,6 +34,7 @@ export const cleanUp = async (prismaClient: PrismaClient) => {
   }
 
   try {
+    await prismaClient.user.deleteMany({});
   } catch (error) {
     throw error;
   }
