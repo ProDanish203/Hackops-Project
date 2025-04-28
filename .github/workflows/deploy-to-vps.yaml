@@ -30,10 +30,22 @@ jobs:
           echo "${{ secrets.CLIENT_ENV }}" > .env
 
       - name: Stop existing containers
-        run: sudo docker compose down --volumes=false || true
+        run: sudo docker compose down || true
+
+      - name: Clean up old volumes (first-time cleanup)
+        run: |
+          sudo docker volume ls | grep "prometheus-data\|grafana-data\|api-data" | awk '{print $2}' | xargs -r sudo docker volume rm || true
 
       - name: Build and start Docker Compose
         run: sudo docker compose up -d --build
+
+      - name: Verify volumes were created
+        run: |
+          echo "=== Checking Volumes ==="
+          sudo docker volume ls
+
+          echo "=== Checking Prometheus Data ==="
+          sudo docker exec prometheus ls -la /prometheus || true
 
       - name: Reload Nginx
         run: sudo systemctl reload nginx

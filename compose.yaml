@@ -1,5 +1,6 @@
 services:
   app:
+    container_name: hackops-app
     depends_on:
       - api
     build: ./client
@@ -20,6 +21,7 @@ services:
       - app-network
 
   api:
+    container_name: hackops-api
     build: ./server
     ports:
       - 8000:8000
@@ -37,19 +39,20 @@ services:
     networks:
       - app-network
     volumes:
-      - api-data:/app/data
+      - hackops-api-data:/app/data
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - hackops-prometheus-data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.listen-address=:9090"
       - "--storage.tsdb.retention.time=30d"
       - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.wal-compression"
     ports:
       - "9090:9090"
     restart: unless-stopped
@@ -62,7 +65,7 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - grafana-data:/var/lib/grafana
+      - hackops-grafana-data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -75,16 +78,13 @@ services:
 
 networks:
   app-network:
+    name: hackops-network
     driver: bridge
 
 volumes:
-  hackops:
-  prometheus-data:
-    name: prometheus-data
-    external: false
-  grafana-data:
-    name: grafana-data
-    external: false
-  api-data:
-    name: api-data
-    external: false
+  hackops-api-data:
+    name: hackops-api-data
+  hackops-prometheus-data:
+    name: hackops-prometheus-data
+  hackops-grafana-data:
+    name: hackops-grafana-data
