@@ -75,7 +75,7 @@ jobs:
           args: >
             -Dsonar.organization=Hackops
             -Dsonar.projectKey=my-inventory-backend
-            -Dsonar.projectName=Inventory Backend
+            -Dsonar.projectName=Inventory-Backend
             -Dsonar.sources=src
             -Dsonar.test.inclusions=**/*.spec.ts
             -Dsonar.exclusions=node_modules/**/*,dist/**/*,coverage/**/*,**/*.spec.ts,test/**/*
