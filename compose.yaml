@@ -36,6 +36,8 @@ services:
           action: sync
     networks:
       - app-network
+    volumes:
+      - api-data:/app/data
 
   prometheus:
     image: prom/prometheus:latest
@@ -46,6 +48,8 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.listen-address=:9090"
+      - "--storage.tsdb.retention.time=30d"
+      - "--storage.tsdb.path=/prometheus"
     ports:
       - "9090:9090"
     restart: unless-stopped
@@ -76,4 +80,11 @@ networks:
 volumes:
   hackops:
   prometheus-data:
+    name: prometheus-data
+    external: false
   grafana-data:
+    name: grafana-data
+    external: false
+  api-data:
+    name: api-data
+    external: false
