@@ -153,6 +153,8 @@ docker compose up -d --build
 ![Prometheus Metrics](./images/prometheus-dashboard.png)
 #### Raw Metrics from API
 ![Raw Metrics](./images/raw-metrics.png)
+#### CI/CD Pipelines
+![CI/CD Pipelines](./images/ci-cd.png)
 #### SonarQube Dashboard
 ![SonarQube Dashboard](./images/sonarqube-dashboard.png)
 ![SonarQube Quality Gate](./images/sonarqube-quality-gate.png)
@@ -163,7 +165,9 @@ docker compose up -d --build
 ![Dashboard](./images/ui-dashbaord.png)
 ![Users](./images/ui-users.png)
 ![Products](./images/ui-products.png)
+![Add product](./images/add-product.png)
 ![Categories](./images/ui-categories.png)
 ![Orders](./images//ui-orders.png)
+![Order Details](./images//order-details.png)
 
 _Built for the Hackops'25_
