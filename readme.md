@@ -28,6 +28,12 @@ A comprehensive inventory management system for e-commerce store administrators 
 
 Our project showcases a complete DevOps implementation that creates a complete end-to-end solution where developers can focus solely on writing code while the infrastructure handles everything else. We've built a production-ready system that automates deployment, testing, monitoring, and security, eliminating operational overhead and creating a true "push and forget" development experience. The architecture includes:
 
+### Infrastructure as Code (IaC) with Terraform
+
+- **Terraform** is utilized to automate the provisioning of the core infrastructure on DigitalOcean.
+- Specifically, it defines and creates the necessary Droplet (VPS) where the application stack is deployed.
+- This approach ensures consistent, repeatable, and version-controlled infrastructure setup, further contributing to the automated environment.
+
 ### Containerization
 
 - Separate Dockerfiles for frontend and backend services
