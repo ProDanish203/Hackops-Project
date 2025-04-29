@@ -9,7 +9,7 @@ export const Sidebar = () => {
       <div>
         <div className="sm:px-5 px-2 lg:py-10 py-5 max-sm:center">
           <h2 className="text-5xl font-semibold text-text dark:text-darkText max-lg:hidden">
-            Pyzon
+            Hackops
           </h2>
           <Codepen className="lg:hidden sm:size-10 size-7" />
         </div>
