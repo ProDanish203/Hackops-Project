@@ -165,3 +165,5 @@ docker compose up -d --build
 ![Products](./images/ui-products.png)
 ![Categories](./images/ui-categories.png)
 ![Orders](./images//ui-orders.png)
+
+_Built for the Hackops'25_
