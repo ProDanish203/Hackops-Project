@@ -82,8 +82,12 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
           
       - name: SonarQube Quality Gate check
-        uses: sonarsource/sonarqube-quality-gate-check-action@v2
-        timeout-minutes: 5
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          pollingTimeoutSec: 600
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: "Example show SonarQube Quality Gate Status value"
+        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"
